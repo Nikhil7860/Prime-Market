@@ -15,6 +15,7 @@ export const updateModule = async (body: any) => {
 export const deleteModuleApi = async (id: string) => {
     return await deleteRequest(`admin/module/deleteModule/${id}`);
 };
+
 export const deActivateModule = async (id: string) => {
     return await getRequest(`admin/module/deActivateModule/${id}`);
 };

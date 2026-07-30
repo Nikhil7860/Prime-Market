@@ -6,16 +6,13 @@ import User from "@/models/User";
 import Role from "@/models/role";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 
 console.log("Imported Module:", Module?.modelName);
 
 export async function registerUser(data: any) {
     try {
         await initializeConnections();
-
         const existingUser = await User.findOne({ $or: [{ email: data.email }, { phone: data.phone },], });
-
         if (existingUser) {
             return {
                 success: false,
@@ -23,11 +20,8 @@ export async function registerUser(data: any) {
                 message: existingUser.email === data.email ? "Email already exists." : "Phone number already exists.",
             };
         }
-
         const roleResp: any = await Role.findOne({ "roleName": "User" })
-
         const hashed = await bcrypt.hash(data.password, 10);
-
         const user = await User.create({
             name: data.name,
             email: data.email,
@@ -36,33 +30,24 @@ export async function registerUser(data: any) {
             role: roleResp.roleName,
             roleId: roleResp._id
         });
-
         return { success: true, status: 201, data: user };
-
     } catch (error) {
         console.log(error, "in the error of Register User Api")
+        return { success: false, status: 500, error: error };
     }
 };
 
 export async function loginUser(data: any) {
     try {
-
         await initializeConnections()
-
         const user = await User.findOne({ email: data.email });
-
+        console.log(user, "IN THE USER")
         if (!user) throw new Error("User not found");
-
         const isMatch = await bcrypt.compare(data.password, user.password);
-
         if (!isMatch) throw new Error("Invalid password");
-
         const token = generateToken({ id: user._id.toString(), role: user.role, name: user.name });
-
         await redisClient.set(`refresh:${user._id}`, token.refreshToken, { EX: 7 * 24 * 60 * 60 });
-
         const populatedUser = await User.findById(user._id).populate({ path: "roleId", populate: { path: "permissions.module" } });
-
         let finalResponse = {
             user,
             permissions: populatedUser?.roleId?.permissions ?? [],
@@ -70,15 +55,14 @@ export async function loginUser(data: any) {
             refreshToken: token.refreshToken,
             tokenId: token.tokenId
         }
-
         return finalResponse;
     } catch (error) {
         console.log(error, "In the error Login Api")
+        return { success: false, status: 500, error: error };
     }
 }
 
 export async function logoutUser(req: any) {
-
     console.log(req, "IN the Req")
     try {
         const authHeader = req.headers.authorization;
@@ -105,9 +89,9 @@ export async function logoutUser(req: any) {
 
     } catch (error) {
         console.log(error, "in the error of Register User Api")
+        return { success: false, status: 500, error: error };
     }
 };
-
 
 export async function refreshUserToken(refreshToken: string) {
     try {
@@ -131,9 +115,9 @@ export async function refreshUserToken(refreshToken: string) {
         await redisClient.set(`refresh:${decoded.id}`, getToken.refreshToken, { EX: 7 * 24 * 60 * 60 });// 7 days in seconds
 
         return { accessToken: getToken.accessToken, refreshToken: getToken.refreshToken };
-
     } catch (error) {
         console.log(error, "in the error of Register User Api")
+        return { success: false, status: 500, error: error };
     }
 };
 

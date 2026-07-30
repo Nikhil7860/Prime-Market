@@ -62,8 +62,6 @@ export default function AdminSidebar({ isOpen, setIsOpen }: SidebarProps) {
 
     const auth: any = useAppSelector((state) => state.auth);
 
-    console.log(auth, "in the auth")
-
     return (
         <>
             <aside

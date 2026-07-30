@@ -6,6 +6,6 @@ export async function initializeConnections() {
     await Promise.all([
         connectDB(),
         connectRedis(),
-        // connectRabbitMQ()
+        connectRabbitMQ()
     ]);
 }

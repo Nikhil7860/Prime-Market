@@ -19,11 +19,9 @@ interface PaymentGatewayProps {
 }
 
 export default function PaymentGateway({ amount, orderId, onSuccess, onFailure }: PaymentGatewayProps) {
-    const [selectedMethod, setSelectedMethod] =
-        useState("UPI");
+    const [selectedMethod, setSelectedMethod] = useState("UPI");
 
-    const [processing, setProcessing] =
-        useState(false);
+    const [processing, setProcessing] = useState(false);
 
     const paymentMethods = [
         {
@@ -31,11 +29,15 @@ export default function PaymentGateway({ amount, orderId, onSuccess, onFailure }
             icon: Smartphone,
         },
         {
-            name: "Credit Card",
+            name: "Card",
             icon: CreditCard,
         },
         {
-            name: "Net Banking",
+            name: "NetBanking",
+            icon: Landmark,
+        },
+        {
+            name: "COD",
             icon: Landmark,
         },
         {
@@ -61,7 +63,7 @@ export default function PaymentGateway({ amount, orderId, onSuccess, onFailure }
         setProcessing(false);
 
         if (success) {
-            onSuccess(selectedMethod,transactionId);
+            onSuccess(selectedMethod, transactionId);
         } else {
             onFailure(selectedMethod);
         }
@@ -123,34 +125,12 @@ export default function PaymentGateway({ amount, orderId, onSuccess, onFailure }
                     return (
                         <label
                             key={method.name}
-                            className={`flex cursor-pointer items-center gap-4 rounded-xl border p-4 transition ${selectedMethod ===
-                                method.name
-                                ? "border-blue-500 bg-blue-500/10"
-                                : "border-slate-700"
-                                }`}
-                        >
-                            <input
-                                type="radio"
-                                name="paymentMethod"
-                                checked={
-                                    selectedMethod ===
-                                    method.name
-                                }
-                                onChange={() =>
-                                    setSelectedMethod(
-                                        method.name
-                                    )
-                                }
-                            />
+                            className={`flex cursor-pointer items-center gap-4 rounded-xl border p-4 transition ${selectedMethod === method.name ? "border-blue-500 bg-blue-500/10" : "border-slate-700"}`}>
+                            <input type="radio" name="paymentMethod" checked={selectedMethod === method.name} onChange={() => setSelectedMethod(method.name)} />
 
-                            <Icon
-                                className="text-blue-500"
-                                size={22}
-                            />
+                            <Icon className="text-blue-500" size={22} />
 
-                            <span className="text-white">
-                                {method.name}
-                            </span>
+                            <span className="text-white">{method.name}</span>
 
                         </label>
                     );

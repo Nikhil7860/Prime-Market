@@ -10,8 +10,7 @@ export async function POST(req: NextRequest) {
 
         const { categoryName, slug, description, image, parentCategory, displayOrder, isFeatured, status, addedBy, } = body;
 
-        const generatedSlug = categoryName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-
+    
         // Validation
         if (!categoryName || !slug || !addedBy) {
             return NextResponse.json({ success: false, message: "Category Name, Slug and Added By are required.", }, { status: 400 });
@@ -25,7 +24,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Duplicate Slug
-        const slugExists = await Category.findOne({ slug: generatedSlug, });
+        const slugExists = await Category.findOne({ slug: slug, });
 
         if (slugExists) {
             return NextResponse.json({ success: false, message: "Slug already exists.", }, { status: 409 });
@@ -33,7 +32,7 @@ export async function POST(req: NextRequest) {
 
         const category = await Category.create({
             categoryName: categoryName.trim(),
-            slug: generatedSlug,
+            slug: slug,
             description: description || "",
             image: image || "",
             parentCategory: parentCategory || null,

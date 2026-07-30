@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getRequest, postRequest } from "@/services/apiMethods";
 import { createRole, deActivateRole, deleteRoleApi, getRoles, updateRole } from "@/services/role.service";
+import { Pencil, Power, Trash2 } from "lucide-react";
 
 interface Role {
     _id: string;
@@ -193,7 +194,7 @@ export default function RolesSection() {
                                             onClick={() => openEditModal(role)}
                                             className="rounded bg-yellow-500 px-3 py-1 text-white text-sm"
                                         >
-                                            Edit
+                                            <Pencil size={18} />
                                         </button>
 
                                         <button
@@ -203,16 +204,14 @@ export default function RolesSection() {
                                                 : "bg-green-600"
                                                 }`}
                                         >
-                                            {role.status === "Active"
-                                                ? "Deactivate"
-                                                : "Activate"}
+                                            <Power size={18} />
                                         </button>
 
                                         <button
                                             onClick={() => deleteRole(role._id)}
                                             className="rounded bg-black px-3 py-1 text-white text-sm"
                                         >
-                                            Delete
+                                            <Trash2 size={18} />
                                         </button>
 
                                     </div>

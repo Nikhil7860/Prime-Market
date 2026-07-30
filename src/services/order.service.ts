@@ -1,4 +1,4 @@
-import { getRequest, postRequest, putRequest, deleteRequest } from "./apiMethods";
+import { getRequest, postRequest } from "./apiMethods";
 
 export const getAllOrders = async () => {
     return await getRequest("/orders/allOrders");

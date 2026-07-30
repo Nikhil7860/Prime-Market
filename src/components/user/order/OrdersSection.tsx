@@ -51,8 +51,7 @@ export default function OrderSection() {
 
     const [loading, setLoading] = useState(true);
 
-    const [selectedOrder, setSelectedOrder] =
-        useState<Order | null>(null);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -127,13 +126,17 @@ export default function OrderSection() {
     const cancelOrder = async (id: string) => {
         try {
 
-            await updateOrderStatus({ id: id, status: "cancelled" })
+            let payload: any = { id, status: "cancelled", userId: user._id, remarks: "Cancelled By User" }
 
-            toast.success("Order Cancelled");
+            let response: any = await updateOrderStatus(payload)
 
-            fetchOrders();
-
-            setShowModal(false);
+            if (response.success) {
+                toast.success("Order Cancelled");
+                fetchOrders();
+                setShowModal(false);
+            } else {
+                toast.error("Error Occoured");
+            }
         } catch (err) {
             toast.error("Unable to cancel order");
         }

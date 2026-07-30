@@ -1,9 +1,6 @@
 import { getRequest, postRequest, putRequest, deleteRequest } from "./apiMethods";
 
-interface updateStatus {
-    id: string,
-    status: boolean
-}
+interface updateStatus { id: string, status: boolean }
 
 export const getProducts = async () => {
     return await getRequest("/products/getProducts");

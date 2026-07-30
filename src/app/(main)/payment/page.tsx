@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import PaymentGateway from "@/components/user/payment/PaymentGateway";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { emptyTheCart } from "@/redux/cart/cartSlice";
 import { postRequest } from "@/services/apiMethods";
 import toast from "react-hot-toast";
+import { getCouponByCode, getCoupons } from "@/services/coupon.service";
 
 export default function PaymentPage() {
     const router = useRouter();
@@ -18,9 +19,7 @@ export default function PaymentPage() {
     const [discount, setDiscount] = useState(0);
     const [appliedCoupon, setAppliedCoupon] = useState("");
     const [couponLoading, setCouponLoading] = useState(false);
-
     const total = cart.products.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
-
     const finalAmountAfterDiscount = total - discount;
 
     const handleApplyCoupon = async () => {
@@ -32,23 +31,114 @@ export default function PaymentPage() {
         try {
             setCouponLoading(true);
 
-            // Replace this with your API call later
-            // const res = await postRequest("/coupon/apply", {
-            //     code: couponCode,
-            //     amount: total,
-            // });
+            const response: any = await getCouponByCode(couponCode.toUpperCase());
 
-            // Demo coupon
-            if (couponCode.toUpperCase() === "SAVE10") {
-                const discountAmount = total * 0.1;
+            console.log(response, "IN THE response")
 
-                setDiscount(discountAmount);
-                setAppliedCoupon(couponCode.toUpperCase());
-
-                toast.success("Coupon Applied Successfully");
-            } else {
-                toast.error("Invalid Coupon");
+            if (!response?.data?.length) {
+                toast.error("Invalid coupon code. 8888888");
+                return;
             }
+
+            const coupon = response.data[0];
+
+            console.log(coupon, "IN the coupon")
+
+            // Prevent applying same coupon twice
+            if (appliedCoupon === coupon.code) {
+                toast.error("Coupon is already applied.");
+                return;
+            }
+
+            // Active check
+            if (!coupon.isActive) {
+                toast.error("This coupon is inactive.");
+                return;
+            }
+
+            const now = new Date();
+            const startDate = new Date(coupon.startDate);
+            const endDate = new Date(coupon.endDate);
+
+            // Coupon not started
+            if (now < startDate) {
+                console.log("50000000000000000000000")
+                toast.error("This coupon is not active yet.");
+                return;
+            }
+
+            // Coupon expired
+            if (now > endDate) {
+                toast.error("This coupon has expired.");
+                return;
+            }
+
+            // Usage limit
+            if (coupon.usedCount >= coupon.usageLimit) {
+                toast.error("Coupon usage limit exceeded.");
+                return;
+            }
+
+            // Minimum order
+            if (total < coupon.minOrderAmount) {
+                toast.error(`Minimum order amount should be ₹${coupon.minOrderAmount}.`);
+                return;
+            }
+
+            // Calculate discount
+            let discountAmount = 0;
+
+            if (coupon.discountType === "percentage") {
+                discountAmount = (total * coupon.discountValue) / 100;
+            } else {
+                discountAmount = coupon.discountValue;
+            }
+
+            // Maximum discount
+            if (coupon.maxDiscountAmount && discountAmount > coupon.maxDiscountAmount) {
+                discountAmount = coupon.maxDiscountAmount;
+            }
+
+            // Prevent discount greater than order amount
+            discountAmount = Math.min(discountAmount, total);
+
+            /**
+             * OPTIONAL
+             * Category Validation
+             *
+             * if (
+             *   coupon.applicableCategories.length &&
+             *   !cartItems.some(item =>
+             *      coupon.applicableCategories.includes(item.categoryName)
+             *   )
+             * ) {
+             *      toast.error("Coupon is not applicable for these products.");
+             *      return;
+             * }
+             */
+
+            /**
+             * OPTIONAL
+             * Product Validation
+             *
+             * if (
+             *   coupon.applicableProducts.length &&
+             *   !cartItems.some(item =>
+             *      coupon.applicableProducts.includes(item.productId)
+             *   )
+             * ) {
+             *      toast.error("Coupon is not applicable on selected products.");
+             *      return;
+             * }
+             */
+
+            setDiscount(discountAmount);
+            setAppliedCoupon(coupon.code);
+
+            toast.success(`Coupon applied successfully. You saved ₹${discountAmount}.`);
+        } catch (error) {
+            console.error(error);
+            toast.error("Unable to apply coupon.");
         } finally {
             setCouponLoading(false);
         }
@@ -76,6 +166,7 @@ export default function PaymentPage() {
                 discount
             };
 
+            console.log(order, "In the order")
             const data: any = await postRequest("/orders/createOrder", order);
 
             dispatch(emptyTheCart());

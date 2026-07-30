@@ -8,25 +8,56 @@ export async function PUT(request: Request) {
 
         const body = await request.json();
 
-        const updateCoupon = await Coupon.findByIdAndUpdate(
-            body.id,
+        const { id, code, description, discountType, discountValue, minOrderAmount, maxDiscountAmount, usageLimit, startDate, endDate, isActive, applicableCategories, applicableProducts } = body;
+
+        // Required Fields
+        if (!id) return NextResponse.json({ success: false, message: "Coupon Id is required.", }, { status: 400 });
+
+
+        if (!code) return NextResponse.json({ success: false, message: "Coupon code is required.", }, { status: 400 });
+
+
+        // Coupon Exists
+        const coupon = await Coupon.findById(id);
+
+        if (!coupon) return NextResponse.json({ success: false, message: "Coupon not found.", }, { status: 404 });
+
+
+        // // Duplicate Code Check
+        // const duplicateCoupon = await Coupon.findOne({ code: code.trim().toUpperCase(), _id: { $ne: id }, });
+
+        // if (duplicateCoupon) {
+        //     return NextResponse.json({ success: false, message: "Coupon code already exists.", }, { status: 409 });
+        // }
+
+        // Date Validation
+        if (new Date(startDate) > new Date(endDate)) return NextResponse.json({ success: false, message: "Start date cannot be greater than end date.", }, { status: 400 });
+
+
+        // Update Coupon
+        const updatedCoupon = await Coupon.findByIdAndUpdate(
+            id,
             {
-                roleName: body.roleName,
-                description: body.description,
+                code: code.trim().toUpperCase(),
+                description: description?.trim() || "",
+                discountType,
+                discountValue,
+                minOrderAmount,
+                maxDiscountAmount,
+                usageLimit,
+                startDate,
+                endDate,
+                isActive,
+                applicableCategories: applicableCategories || [],
+                applicableProducts: applicableProducts || [],
             },
-            {
-                new: true,
-                runValidators: true,
-            }
+            { new: true, runValidators: true }
         );
 
-        if (!updateCoupon) {
-            return NextResponse.json({ message: "Role not found" }, { status: 404 });
-        }
+        return NextResponse.json({ success: true, message: "Coupon updated successfully.", data: updatedCoupon, }, { status: 200 });
+    } catch (error: any) {
+        console.error("Update Coupon Error:", error);
 
-        return NextResponse.json(updateCoupon, { status: 200 });
-    } catch (err: any) {
-        console.log(err, "In err")
-        return NextResponse.json({ message: err.message, }, { status: 400 });
+        return NextResponse.json({ success: false, message: error.message || "Something went wrong.", }, { status: 500 });
     }
 }

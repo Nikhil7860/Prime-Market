@@ -87,9 +87,7 @@ export default function OrderDetailsModal({ open, order, onClose, onCancel, onRe
         },
     ];
 
-    const currentIndex = timelineSteps.findIndex(
-        (step) => step.value === order.status
-    );
+    const currentIndex = timelineSteps.findIndex((step) => step.value === order.status);
 
     return (
         <div
@@ -244,7 +242,7 @@ export default function OrderDetailsModal({ open, order, onClose, onCancel, onRe
                                         </h3>
 
                                         <p className="mt-1 text-sm text-slate-500">
-                                            {order.products.length} dsfsdfdsItem{order.products.length > 1 ? "s" : ""} in this order
+                                            {order.products.length} Item{order.products.length > 1 ? "s" : ""} in this order
                                         </p>
 
                                     </div>

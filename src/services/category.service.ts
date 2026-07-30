@@ -1,16 +1,11 @@
 import { getRequest, postRequest, putRequest, deleteRequest } from "./apiMethods";
 
-interface updateStatus {
-    id: string,
-    status: boolean
-}
-
 export const getCategories = async () => {
     return await getRequest("/productCategory/getProductCategory");
 };
 
 export const addCategory = async (categoryBody: any) => {
-    return await postRequest(`/products/getProductByCategoryName`, categoryBody);
+    return await postRequest(`/productCategory/addCategory`, categoryBody);
 };
 
 export const updateCategoryStatus = async (categoryBody: any) => {
@@ -18,19 +13,9 @@ export const updateCategoryStatus = async (categoryBody: any) => {
 };
 
 export const updateCategory = async (categoryBody: any) => {
-    return await putRequest(`/products/getProductByCategoryName`, categoryBody);
+    return await putRequest(`/productCategory/updateCategory`, categoryBody);
 };
 
 export const deleteCategoryApi = async (id: string) => {
-    return await getRequest(`/products/getProductById/${id}`);
+    return await deleteRequest(`/productCategory/deleteCategory/${id}`);
 };
-
-
-
-
-
-
-
-
-
-

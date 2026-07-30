@@ -27,15 +27,8 @@ interface LoginPayload {
     tokenId: string;
     permissions?: string[];
 }
-
-interface UpdateAccessTokenPayload {
-    accessToken: string;
-    refreshToken: string;
-}
-
-interface UpdateUserPayload {
-    userDetails: Record<string, unknown>;
-}
+interface UpdateAccessTokenPayload { accessToken: string; refreshToken: string; }
+interface UpdateUserPayload { userDetails: Record<string, unknown>; }
 
 
 const authSlice = createSlice({

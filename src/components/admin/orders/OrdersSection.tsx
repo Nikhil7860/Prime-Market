@@ -3,9 +3,10 @@
 import { useEffect, useState, useMemo } from "react";
 import toast from "react-hot-toast";
 import { postRequest } from "@/services/apiMethods";
-import { X } from "lucide-react";
+import { Eye, Pencil, X } from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getAllOrders, updateOrderStatus } from "@/services/order.service";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 
 interface OrderItem {
     _id: string;
@@ -33,7 +34,7 @@ export default function OrdersSection() {
     const [editOrder, setEditOrder] = useState<any | null>(null);
     const [editStatus, setEditStatus] = useState("");
     const [paymentStatus, setPaymentStatus] = useState("");
-
+    const loggedInUser: any = useAppSelector((state) => state.auth.user);
 
     const ITEMS_PER_PAGE = 10;
 
@@ -83,11 +84,17 @@ export default function OrdersSection() {
         if (!editOrder) return;
 
         try {
-            await postRequest("orders/updateOrderStatus", { id: editOrder._id, status: editStatus });
-            toast.success("Order updated successfully");
-            setIsEditMode(false);
-            setEditOrder(null);
-            fetchOrders();
+
+            let payload: any = { id: editOrder, status: editStatus, userId: loggedInUser._id, remarks: "Cancelled By Admin" }
+            let response: any = await updateOrderStatus(payload)
+            if (response.success) {
+                toast.success("Order updated successfully");
+                setIsEditMode(false);
+                setEditOrder(null);
+                fetchOrders();
+            } else {
+                toast.error("Order Not updated");
+            }
         } catch (err) {
             console.log(err);
             toast.error("Failed to update order");
@@ -107,11 +114,17 @@ export default function OrdersSection() {
     // ---------------- UPDATE STATUS ----------------
     const updateStatus = async (id: string, status: string) => {
         try {
+            let payload: any = { id, status, userId: loggedInUser._id, remarks: "Cancelled By Admin" }
 
-            let response = await updateOrderStatus({ id, status })
-            toast.success("Status updated");
+            let response: any = await updateOrderStatus(payload)
+
+            if (response.success) {
+
+                toast.success("Status updated");
+            } else {
+                toast.error("Status Not updated");
+            }
             fetchOrders();
-
             if (selectedOrder) {
                 setSelectedOrder({ ...selectedOrder, status });
             }
@@ -230,14 +243,14 @@ export default function OrdersSection() {
                                             onClick={() => handleViewOrder(order)}
                                             className="rounded bg-slate-900 px-3 py-1 text-white"
                                         >
-                                            View
+                                            <Eye size={18} />
                                         </button>
 
                                         <button
                                             onClick={() => handleEditOrder(order)}
                                             className="rounded bg-blue-600 px-3 py-1 text-white"
                                         >
-                                            Edit
+                                            <Pencil size={18} />
                                         </button>
 
                                         <select

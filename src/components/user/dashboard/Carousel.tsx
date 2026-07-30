@@ -9,7 +9,7 @@ const images = [
     "https://res.cloudinary.com/ddmzxke71/image/upload/v1782034906/cld-sample-3.jpg",
     "https://res.cloudinary.com/ddmzxke71/image/upload/v1782034906/cld-sample-4.jpg",
     "https://res.cloudinary.com/ddmzxke71/image/upload/v1782034906/cld-sample-5.jpg",
-    "https://res.cloudinary.com/ddmzxke71/image/upload/v1782034906/cld-sample-6.jpg",
+    "https://res.cloudinary.com/ddmzxke71/image/upload/v1782034900/samples/balloons.jpg",
 ];
 
 export default function Carousel() {

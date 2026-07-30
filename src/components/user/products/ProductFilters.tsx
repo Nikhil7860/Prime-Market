@@ -39,6 +39,8 @@ export default function ProductFilters({
     onStockChange,
     onClearFilters }: ProductFiltersProps) {
 
+    console.log(category, "In the category 1111111121321")
+
     return (
         <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6 backdrop-blur-xl">
 
@@ -68,9 +70,7 @@ export default function ProductFilters({
 
                         <input
                             value={search}
-                            onChange={(e) =>
-                                onSearchChange(e.target.value)
-                            }
+                            onChange={(e) => onSearchChange(e.target.value)}
                             placeholder="Search products..."
                             className="w-full rounded-xl border border-slate-700 bg-slate-800 py-3 pl-11 pr-4 outline-none transition focus:border-cyan-400"
                         />
@@ -84,14 +84,12 @@ export default function ProductFilters({
                 <div>
 
                     <label className="mb-2 block text-sm text-slate-400">
-                        Category
+                        Category wfe
                     </label>
 
                     <select
                         value={category}
-                        onChange={(e) =>
-                            onCategoryChange(e.target.value)
-                        }
+                        onChange={(e) => onCategoryChange(e.target.value)}
                         className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 outline-none focus:border-cyan-400"
                     >
                         {categories.map((item) => (
@@ -216,9 +214,7 @@ export default function ProductFilters({
                     <input
                         type="checkbox"
                         checked={inStock}
-                        onChange={(e) =>
-                            onStockChange(e.target.checked)
-                        }
+                        onChange={(e) => onStockChange(e.target.checked)}
                         className="h-5 w-5 rounded accent-cyan-500"
                     />
 

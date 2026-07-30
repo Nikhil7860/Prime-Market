@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRequest, postRequest } from "@/services/apiMethods";
 import { createModule, deActivateModule, deleteModuleApi, getModules, updateModule, } from "@/services/module.service";
+import { Search, Plus, Pencil, Trash2, Power, X, Loader2, Eye } from "lucide-react";
 
 
 interface Module {
@@ -211,7 +211,7 @@ export default function ModulesSection() {
                                             onClick={() => openEditModal(module)}
                                             className="rounded bg-yellow-500 px-3 py-1 text-white text-sm"
                                         >
-                                            Edit
+                                            <Pencil size={18} />
                                         </button>
 
                                         <button
@@ -221,16 +221,14 @@ export default function ModulesSection() {
                                                 : "bg-green-600"
                                                 }`}
                                         >
-                                            {module.status === "Active"
-                                                ? "Deactivate"
-                                                : "Activate"}
+                                            <Power size={18} />
                                         </button>
 
                                         <button
                                             onClick={() => deleteModule((module._id))}
                                             className="rounded bg-black px-3 py-1 text-white text-sm"
                                         >
-                                            Delete
+                                            <Trash2 size={18} />
                                         </button>
 
                                     </div>

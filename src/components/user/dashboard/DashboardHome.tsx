@@ -19,12 +19,14 @@ export default function DashboardHome() {
 
     const fetchDashboard = async (id: string) => {
         const res = await getRequest(`users/dashboard/${id}`);
+        console.log(res, res)
         setDashboard(res);
     };
 
     const fetchTranscation = async (id: string) => {
         try {
             let transacationsResp = await getTransactionById(id)
+
             settransacations(transacationsResp)
 
         } catch (error) {

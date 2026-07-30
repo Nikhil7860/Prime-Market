@@ -12,51 +12,31 @@ export interface Product {
     name: string;
     slug: string;
     description: string;
-
     category: string;
     categoryName: string;
-
     brand: string;
-
-    images: {
-        _id?: string;
-        image: string;
-        name: string;
-    }[];
-
+    images: { _id?: string; image: string; name: string; }[];
     price: number;
     discountPercentage: number;
     stock: number;
-
     rating: number;
     reviews: number;
-
     highlights: string[];
-
     specifications: Record<string, string>;
-
     isFeatured: boolean;
     isActive: boolean;
-
     createdAt?: string;
     updatedAt?: string;
 }
 
-const categories = [
-    "All",
-    "Smartphones",
-    "Laptops",
-    "Accessories",
-    "Gaming",
-    "Fashion",
-];
+
 
 export default function ProductsPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const urlCategory = searchParams.get("category");
     const cart = useAppSelector((state) => state.cart);
-    const [category, setCategory] = useState(urlCategory || "All");
+    const [category, setCategory] = useState<any>(urlCategory);
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState("featured");
     const [products, setProducts] = useState<Product[]>([]);
@@ -64,9 +44,10 @@ export default function ProductsPage() {
     const [rating, setRating] = useState(0);
     const [inStock, setInStock] = useState(false);
 
+    console.log(urlCategory, "in the urlCategory")
 
     useEffect(() => {
-        const selectedCategory = urlCategory || "All";
+        const selectedCategory: any = urlCategory;
         setCategory(selectedCategory);
         if (selectedCategory !== "All") {
             fetchProductsByCategoryName(selectedCategory);
@@ -89,7 +70,6 @@ export default function ProductsPage() {
     const fetchProductsByCategoryName = async (categoryName: string) => {
         try {
             const response: any = await getProductByCategoryName(categoryName);
-
             setProducts(response || []);
         } catch (error) {
             console.log(error);
@@ -106,13 +86,11 @@ export default function ProductsPage() {
         // Search
         if (search.trim()) {
             const query = search.toLowerCase();
-
             data = data.filter(
                 (item) =>
                     item.name.toLowerCase().includes(query) ||
                     item.brand.toLowerCase().includes(query) ||
-                    item.categoryName.toLowerCase().includes(query)
-            );
+                    item.categoryName.toLowerCase().includes(query));
         }
 
         // Price
@@ -192,7 +170,7 @@ export default function ProductsPage() {
                             onStockChange={setInStock}
                             onClearFilters={() => {
                                 setSearch("");
-                                setCategory("All");
+                                setCategory(category);
                                 setSort("featured");
                                 setMinPrice(minPrice);
                                 setRating(rating);

@@ -10,11 +10,8 @@ export async function GET() {
 
         const count = await Category.countDocuments();
 
-        console.log(count, "IN THE count")
-
         if (count === 0) {
 
-            
             const userId = new mongoose.Types.ObjectId("6a5332521d2a1e9c4b5e1053");
 
             await Category.insertMany([
@@ -138,6 +135,7 @@ export async function GET() {
                     addedBy: userId,
                 },
             ]);
+
         }
 
         const productsCatagory = await Category.find();

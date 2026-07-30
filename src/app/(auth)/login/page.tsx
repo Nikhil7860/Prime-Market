@@ -32,11 +32,7 @@ export default function LoginPage() {
         try {
             const data: any = await postRequest("/auth/login", form);
 
-            console.log(data, "Data from Login Api")
-
             let payload = { userDetails: data.user, permissions: data.permissions, accessToken: data.accessToken, refreshToken: data.refreshToken, tokenId: data.tokenId }
-
-            console.log(payload, "In the paylod of the redux dispatch login")
 
             dispatch(login(payload));
 

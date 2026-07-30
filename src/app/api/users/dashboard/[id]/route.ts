@@ -23,89 +23,41 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             recentTransactions,
         ] = await Promise.all([
 
-            Order.countDocuments({
-                user: userId,
-            }),
+            Order.countDocuments({ user: userId, }),
 
-            Order.countDocuments({
-                user: userId,
-                status: "delivered",
-            }),
+            Order.countDocuments({ user: userId, status: "delivered", }),
 
-            Order.countDocuments({
-                user: userId,
-                status: "pending",
-            }),
+            Order.countDocuments({ user: userId, status: "pending", }),
 
             Order.aggregate([
-                {
-                    $match: {
-                        user: userId,
-                        paymentStatus: "Paid",
-                    },
-                },
-                {
-                    $group: {
-                        _id: null,
-                        totalSpent: {
-                            $sum: "$amount",
-                        },
-                    },
-                },
+                { $match: { user: userId, paymentStatus: "Paid" }, },
+                { $group: { _id: null, totalSpent: { $sum: "$amount", }, }, },
             ]),
 
-            Order.find({
-                user: userId,
-            })
-                .sort({
-                    createdAt: -1,
-                })
+            Order.find({ user: userId })
+                .sort({ createdAt: -1, })
                 .limit(5)
                 .populate("products.product", "name images"),
 
-            Order.find({
-                user: userId,
-                paymentStatus: "Success",
-            })
-                .sort({
-                    createdAt: -1,
-                })
+            Order.find({ user: userId, paymentStatus: "Paid", })
+                .sort({ createdAt: -1, })
                 .limit(5)
-                .select(
-                    "transactionId amount paymentMethod paymentStatus createdAt"
-                ),
+                .select("transactionId amount paymentMethod paymentStatus createdAt"),
         ]);
 
-        const totalSpent =
-            totalSpentResult.length > 0
-                ? totalSpentResult[0].totalSpent
-                : 0;
+        const totalSpent = totalSpentResult.length > 0 ? totalSpentResult[0].totalSpent : 0;
 
         return NextResponse.json({
             success: true,
-
             stats: {
                 totalOrders,
                 delivered,
                 pending,
                 totalSpent,
-            },
-
-            recentOrders,
-
-            recentTransactions,
+            }, recentOrders, recentTransactions,
         });
     } catch (error: any) {
         console.log(error);
-
-        return NextResponse.json(
-            {
-                success: false,
-                message: error.message,
-            },
-            {
-                status: 500,
-            }
-        );
+        return NextResponse.json({ success: false, message: error.message, }, { status: 500, });
     }
 }

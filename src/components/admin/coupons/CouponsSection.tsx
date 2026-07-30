@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { deActivateCoupon, getCoupons } from "@/services/coupon.service";
 import { createCoupon, updateCoupon, deleteCoupon } from "@/services/coupon.service";
 import { getProducts } from "@/services/product.service";
+import { getCategories } from "@/services/category.service";
+import { Search, Plus, Pencil, Trash2, Power, X, Loader2, Eye } from "lucide-react";
 
 
 interface Coupon {
@@ -117,20 +119,20 @@ export default function CouponsSection() {
             FETCH CATEGORIES
     ============================ */
 
-    // const fetchCategories = async () => {
-    //     try {
-    //         const res: any = await getCategories();
+    const fetchCategories = async () => {
+        try {
+            const res: any = await getCategories();
 
-    //         setCategories(Array.isArray(res) ? res : []);
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // };
+            setCategories(Array.isArray(res) ? res : []);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(() => {
         fetchCoupons();
         fetchProducts();
-        // fetchCategories();
+        fetchCategories();
     }, []);
 
     /* ============================
@@ -266,10 +268,8 @@ export default function CouponsSection() {
             setSaving(true);
 
             if (isEdit) {
-                await updateCoupon({
-                    id: selectedCoupon?._id,
-                    ...form,
-                });
+                let reponse = await updateCoupon({ id: selectedCoupon?._id, ...form });
+                console.log(reponse, "IN THE RESPONSE")
             } else {
                 await createCoupon(form);
             }
@@ -289,7 +289,9 @@ export default function CouponsSection() {
         try {
             await deleteCoupon(id);
 
-            fetchCoupons();
+            let resp = fetchCoupons();
+
+            console.log(resp, "in the resp")
         } catch (error) {
             console.log(error);
         }
@@ -536,47 +538,20 @@ export default function CouponsSection() {
 
                                         <div className="flex flex-wrap gap-2">
 
-                                            <button
-                                                onClick={() =>
-                                                    openViewModal(coupon)
-                                                }
-                                                className="rounded-lg bg-slate-800 px-3 py-1 text-sm text-white transition hover:bg-black"
-                                            >
-                                                View
+                                            <button onClick={() => openViewModal(coupon)} className="rounded-lg bg-slate-800 px-3 py-1 text-sm text-white transition hover:bg-black">
+                                                <Eye size={18} />
                                             </button>
 
-                                            <button
-                                                onClick={() =>
-                                                    openEditModal(coupon)
-                                                }
-                                                className="rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white transition hover:bg-yellow-600"
-                                            >
-                                                Edit
+                                            <button onClick={() => openEditModal(coupon)} className="rounded-lg bg-blue-600 p-2 text-white hover:bg-blue-700">
+                                                <Pencil size={18} />
                                             </button>
 
-                                            <button
-                                                onClick={() =>
-                                                    toggleStatus(coupon)
-                                                }
-                                                className={`rounded-lg px-3 py-1 text-sm text-white transition
-
-                                            ${coupon.isActive
-                                                        ? "bg-red-600 hover:bg-red-700"
-                                                        : "bg-green-600 hover:bg-green-700"
-                                                    }`}
-                                            >
-                                                {coupon.isActive
-                                                    ? "Deactivate"
-                                                    : "Activate"}
+                                            <button onClick={() => toggleStatus(coupon)} className="rounded-lg bg-yellow-500 p-2 text-white hover:bg-yellow-600">
+                                                <Power size={18} />
                                             </button>
 
-                                            <button
-                                                onClick={() =>
-                                                    handleDelete(coupon._id)
-                                                }
-                                                className="rounded-lg bg-black px-3 py-1 text-sm text-white transition hover:bg-slate-800"
-                                            >
-                                                Delete
+                                            <button style={{ backgroundColor: 'red' }} onClick={() => handleDelete(coupon._id)}>
+                                                <Trash2 size={18} />
                                             </button>
 
                                         </div>

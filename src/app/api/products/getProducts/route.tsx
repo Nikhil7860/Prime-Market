@@ -10,8 +10,6 @@ export async function GET() {
 
         const count = await Product.countDocuments();
 
-        console.log(count, "IN THE count")
-
         if (count === 0) {
 
             const categoryId = new mongoose.Types.ObjectId("66b111111111111111111111");

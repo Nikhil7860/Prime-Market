@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getRequest, postRequest } from "@/services/apiMethods";
 import { addUser, getUsers, updateUser, updateUserStatus } from "@/services/user.service";
 import { getRoles } from "@/services/role.service";
+import { Power, Pencil } from "lucide-react";
 
 interface User {
     _id: string;
@@ -233,14 +234,14 @@ export default function UsersSection() {
                                 <td className="p-4">
                                     <div className="flex gap-2">
 
-                                        <button onClick={() => openEditModal(user)} className="rounded bg-yellow-500 px-3 py-1 text-white text-sm">
-                                            Edit
+                                        <button onClick={() => openEditModal(user)} className="rounded bg-blue-500 px-3 py-1 text-white text-sm">
+                                            <Pencil size={18} />
                                         </button>
 
                                         <button
                                             onClick={() => toggleUserStatus(user)}
                                             className={`rounded px-3 py-1 text-white text-sm ${user.status === "Active" ? "bg-red-600" : "bg-green-600"}`}>
-                                            {user.status === "Active" ? "Deactivate" : "Activate"}
+                                            <Power size={18} />
                                         </button>
 
                                     </div>

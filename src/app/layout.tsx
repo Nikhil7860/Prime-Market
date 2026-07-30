@@ -3,10 +3,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import ReduxProvider from "@/redux/provider";
 
-export const metadata: Metadata = {
-  title: "Prime Markets",
-  description: "Ecommerce",
-};
+export const metadata: Metadata = { title: "Prime Markets", description: "Ecommerce" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

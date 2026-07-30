@@ -11,27 +11,16 @@ export interface CartProduct {
     quantity: number;
 }
 
-export interface CartState {
-    products: CartProduct[];
-    orderId: string;
-    categoryAry: []
-}
+export interface CartState { products: CartProduct[]; orderId: string; categoryAry: [] }
 
-const initialState: CartState = {
-    products: [],
-    orderId: "",
-    categoryAry: []
-};
+const initialState: CartState = { products: [], orderId: "", categoryAry: [] };
 
 const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
         addToCartState: (state, action: PayloadAction<CartProduct>) => {
-            const existingProduct = state.products.find(
-                (item) => item._id === action.payload._id
-            );
-
+            const existingProduct = state.products.find((item) => item._id === action.payload._id);
             if (existingProduct) {
                 existingProduct.quantity += action.payload.quantity;
             } else {

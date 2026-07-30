@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRoles } from "@/services/role.service";
-import { addCategory, getCategories, updateCategory, updateCategoryStatus } from "@/services/category.service";
-import { Power } from "lucide-react";
+import { addCategory, deleteCategoryApi, getCategories, updateCategory, updateCategoryStatus } from "@/services/category.service";
+import { useAppSelector } from "@/hooks/redux";
+import { Search, Plus, Pencil, Trash2, Power, X, Loader2, Eye } from "lucide-react";
 
 interface ProductCategory {
     _id: string;
@@ -30,6 +30,7 @@ export default function ProductCategory() {
     const [isEdit, setIsEdit] = useState(false);
     const [selectedCategory, setselectedCategory] = useState<ProductCategory | null>(null);
     const [form, setForm] = useState({ categoryName: "", slug: "", description: "", image: "", displayOrder: 1, isFeatured: false, status: true, });
+    const auth: any = useAppSelector((state) => state.auth);
 
     // ---------------- FETCH USERS ----------------
     const fetchProductCategory = async () => {
@@ -73,26 +74,20 @@ export default function ProductCategory() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-
-        setForm((prev) => ({
-            ...prev,
-            [name]: name === "status" ? value === "true" : value,
-        }));
+        setForm((prev) => ({ ...prev, [name]: name === "status" ? value === "true" : value }));
     };
 
     const handleSubmit = async () => {
         try {
             if (isEdit && selectedCategory) {
-
-                await updateCategory({
-                    id: selectedCategory._id,
-                    ...form,
-                })
+                let payload = { id: selectedCategory._id, ...form, }
+                await updateCategory(payload)
             } else {
-
-                await addCategory(form)
+                const generatedSlug = form.categoryName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+                form.slug = generatedSlug
+                let payload = { addedBy: auth.user._id, ...form }
+                await addCategory(payload)
             }
-
             setModalOpen(false);
             fetchProductCategory();
         } catch (err) {
@@ -102,7 +97,6 @@ export default function ProductCategory() {
 
     const toggleCategoryStatus = async (prodCat: ProductCategory) => {
         try {
-
             let payload: requestpayload = {
                 id: prodCat._id,
                 status: prodCat.status === true ? false : true
@@ -114,9 +108,17 @@ export default function ProductCategory() {
         }
     };
 
-    const filteredCategories = categories.filter((u) => u.categoryName?.toLowerCase().includes(search.toLowerCase()));
 
-    console.log(filteredCategories, "in the filteredCategories")
+    const handleDelete = async (prodCat: ProductCategory) => {
+        try {
+            await deleteCategoryApi(prodCat._id)
+            fetchProductCategory()
+        } catch (error) {
+            console.log(error, "in the error")
+        }
+    }
+
+    const filteredCategories = categories.filter((u) => u.categoryName?.toLowerCase().includes(search.toLowerCase()));
 
     return (
         <div className="space-y-6">
@@ -128,7 +130,7 @@ export default function ProductCategory() {
                         Product Category
                     </h1>
                     <p className="text-slate-500 mt-2">
-                        Manage registered users.
+                        Manage Product Category.
                     </p>
                 </div>
 
@@ -136,14 +138,14 @@ export default function ProductCategory() {
                     onClick={openAddModal}
                     className="rounded bg-blue-600 px-4 py-2 text-white"
                 >
-                    + Add User
+                    + Add Category
                 </button>
             </div>
 
             {/* SEARCH */}
             <input
                 className="w-full max-w-sm rounded border border-slate-300 bg-white p-2 text-slate-900 focus:border-blue-500 focus:outline-none"
-                placeholder="Search user..."
+                placeholder="Search Product Category..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
@@ -198,7 +200,10 @@ export default function ProductCategory() {
                                             <Power size={18} />
                                         </button>
                                         <button onClick={() => openEditModal(prodCat)} className="rounded bg-blue-500 px-3 py-1 text-white text-sm">
-                                            Edit
+                                            <Pencil size={18} />
+                                        </button>
+                                        <button onClick={() => handleDelete(prodCat)} className="rounded bg-red-500 px-3 py-1 text-white text-sm">
+                                            <Trash2 size={18} />
                                         </button>
                                     </div>
                                 </td>
@@ -233,7 +238,8 @@ export default function ProductCategory() {
                                     Name
                                 </label>
                                 <input
-                                    name="name"
+                                    type="text"
+                                    name="categoryName"
                                     value={form.categoryName}
                                     onChange={handleChange}
                                     placeholder="Enter category Name"
