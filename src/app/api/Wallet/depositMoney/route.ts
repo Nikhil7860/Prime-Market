@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
-import { registerUser } from "@/services/auth.service";
+import { VerifyToken } from "@/services/auth.service";
 import Wallet from "@/models/Wallet"
 import Transaction from "@/models/Transaction";
 
 export async function POST(request: Request) {
     try {
+        let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
+        if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
+
+
         const body = await request.json();
 
         let { userId, amount } = body

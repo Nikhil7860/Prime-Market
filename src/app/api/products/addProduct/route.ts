@@ -3,9 +3,13 @@ import { initializeConnections } from "@/components/common/initializeConnections
 import Product from "@/models/Product";
 import Category from "@/models/category";
 import slugify from "slugify";
-export async function POST(req: NextRequest) {
+import { VerifyToken } from "@/services/auth.service";
+export async function POST(request: NextRequest) {
     try {
-        const body = await req.json();
+        let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
+        if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
+
+        const body = await request.json();
 
         const product = await createProductService(body);
 

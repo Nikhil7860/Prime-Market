@@ -1,16 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import Category from "@/models/category";
 import { initializeConnections } from "@/components/common/initializeConnections";
+import { VerifyToken } from "@/services/auth.service";
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
     try {
+        let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
+        if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
+
         await initializeConnections();
 
-        const body = await req.json();
+        const body = await request.json();
 
         const { categoryName, slug, description, image, parentCategory, displayOrder, isFeatured, status, addedBy, } = body;
 
-    
+
         // Validation
         if (!categoryName || !slug || !addedBy) {
             return NextResponse.json({ success: false, message: "Category Name, Slug and Added By are required.", }, { status: 400 });

@@ -3,7 +3,6 @@ import { AxiosResponse } from "axios";
 
 export const getRequest = async <T>(url: string): Promise<T> => {
     const response: AxiosResponse<T> = await API.get(url);
-
     return response.data;
 };
 

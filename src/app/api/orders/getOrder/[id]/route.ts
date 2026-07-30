@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-
 import Orders from "@/models/Orders";
 import { initializeConnections } from "@/components/common/initializeConnections";
+import { verifyAccessToken } from "@/lib/jwt";
+import { VerifyToken } from "@/services/auth.service";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
+        if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
+
         await initializeConnections();
 
         const { id } = await params;
@@ -21,7 +25,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         return NextResponse.json(orders, { status: 200 });
     } catch (error: any) {
         console.error(error);
-
         return NextResponse.json({ message: error.message }, { status: 500 });
     }
 }

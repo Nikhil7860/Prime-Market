@@ -4,16 +4,14 @@ import Orders from "@/models/Orders";
 import Coupon from "@/models/coupon";
 import { initializeConnections } from "@/components/common/initializeConnections";
 import { publishMessage } from "@/lib/rabiitmq/publisher";
+import { VerifyToken } from "@/services/auth.service";
 
 export async function POST(request: Request) {
     try {
-
-        console.log(request, "IN THE REQUEST")
-
+        let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
+        if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
         await initializeConnections();
-
         const body = await request.json();
-
         const {
             products,
             userDetails,

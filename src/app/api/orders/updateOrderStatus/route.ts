@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import Orders from "@/models/Orders";
 import { initializeConnections } from "@/components/common/initializeConnections";
+import { VerifyToken } from "@/services/auth.service";
 
 export async function POST(request: Request) {
     try {
+        let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
+        if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
+
         await initializeConnections();
 
         const body = await request.json();

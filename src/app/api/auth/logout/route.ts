@@ -21,12 +21,7 @@ export async function POST(req: NextRequest) {
 
         const decoded = jwt.decode(accessToken) as JwtPayload | null;
 
-        if (!decoded?.exp || !decoded?.id) {
-            return NextResponse.json(
-                { message: "Invalid token" },
-                { status: 401 }
-            );
-        }
+        if (!decoded?.exp || !decoded?.id) return NextResponse.json({ message: "Invalid token" }, { status: 401 });
 
         const now = Math.floor(Date.now() / 1000);
 

@@ -27,13 +27,42 @@ export const generateToken = (payload: JwtPayload) => {
 
     const accessToken = jwt.sign({ ...payload, tokenId, type: "access", }, JWT_SECRET, { expiresIn: "1m", });
 
-    const refreshToken = jwt.sign({ ...payload, tokenId, type: "refresh", }, JWT_REFRESH_SECRET, { expiresIn: "10m", });
+    const refreshToken = jwt.sign({ ...payload, tokenId, type: "refresh", }, JWT_REFRESH_SECRET, { expiresIn: "2m", });
 
     return { accessToken, refreshToken, tokenId };
 };
 
 export const verifyAccessToken = (token: string): JwtPayload => {
-    return jwt.verify(token, JWT_SECRET) as JwtPayload;
+    try {
+        return jwt.verify(token, JWT_SECRET) as JwtPayload;
+    } catch (error: any) {
+
+        if (error.name === "TokenExpiredError") {
+            return {
+                success: false,
+                code: "TOKEN_EXPIRED",
+                message: "Access token has expired",
+                expiredAt: error.expiredAt,
+                statusCode: 401
+            } as any;
+        }
+
+        if (error.name === "JsonWebTokenError") {
+            return {
+                success: false,
+                code: "INVALID_TOKEN",
+                message: "Invalid access token",
+                statusCode: 401
+            } as any;
+        }
+
+        return {
+            success: false,
+            code: "UNKNOWN_ERROR",
+            message: error.message,
+            statusCode: 500
+        } as any;
+    }
 };
 
 export const verifyRefreshToken = (token: string): JwtPayload => {

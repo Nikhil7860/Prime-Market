@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/Product";
 import { initializeConnections } from "@/components/common/initializeConnections";
+import { VerifyToken } from "@/services/auth.service";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ categoryName: string }> }) {
     try {
+
         await initializeConnections();
 
         const { categoryName } = await params;

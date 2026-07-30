@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/Product";
 import { initializeConnections } from "@/components/common/initializeConnections";
+import { VerifyToken } from "@/services/auth.service";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
 
         await initializeConnections();
@@ -351,7 +352,7 @@ export async function GET() {
         }
 
         const products = await Product.find();
-        
+
         return NextResponse.json(products, { status: 200 });
 
     } catch (err: any) {

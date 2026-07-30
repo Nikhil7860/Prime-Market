@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
 import { initializeConnections } from "@/components/common/initializeConnections";
+import { VerifyToken } from "@/services/auth.service";
 
 import User from "@/models/User";
 import Product from "@/models/Product";
 import Order from "@/models/Orders";
+import { decodeToken } from "@/lib/jwt";
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
+        let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
+        if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
+        let userRole = decodeToken(request.headers.get("authorization")?.split(" ")[1] as string)
+        if (userRole?.role !== "user") return NextResponse.json({ message: "Not Admin", }, { status: 403 });
+
         await initializeConnections();
 
         const currentYear = new Date().getFullYear();

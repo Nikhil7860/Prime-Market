@@ -1,13 +1,11 @@
 import Module from "@/models/module";
 import { initializeConnections } from "@/components/common/initializeConnections";
-import { generateToken, JwtPayload } from "@/lib/jwt";
+import { generateToken, JwtPayload, verifyAccessToken, verifyRefreshToken } from "@/lib/jwt";
 import { redisClient } from "@/lib/redis";
 import User from "@/models/User";
 import Role from "@/models/role";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-console.log("Imported Module:", Module?.modelName);
 
 export async function registerUser(data: any) {
     try {
@@ -41,7 +39,6 @@ export async function loginUser(data: any) {
     try {
         await initializeConnections()
         const user = await User.findOne({ email: data.email });
-        console.log(user, "IN THE USER")
         if (!user) throw new Error("User not found");
         const isMatch = await bcrypt.compare(data.password, user.password);
         if (!isMatch) throw new Error("Invalid password");
@@ -88,7 +85,7 @@ export async function logoutUser(req: any) {
         return { message: "User Sucessfully Logged Out" };
 
     } catch (error) {
-        console.log(error, "in the error of Register User Api")
+        console.log(error, "in the error of Logout User Api")
         return { success: false, status: 500, error: error };
     }
 };
@@ -98,7 +95,10 @@ export async function refreshUserToken(refreshToken: string) {
         if (!refreshToken) throw new Error("No refresh token");
 
         // ✅ verify token
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
+        // const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
+        const decoded = verifyRefreshToken(refreshToken)
+
+        console.log(decoded, "In the decoded")
 
         // ✅ check in Redis
         const stored = await redisClient.get(`refresh:${decoded.id}`);
@@ -109,15 +109,26 @@ export async function refreshUserToken(refreshToken: string) {
         await redisClient.del(`refresh:${decoded.id}`);
 
         // ✅ generate new tokens
-        const getToken = generateToken({ id: decoded.id })
+        const getToken = generateToken({ id: decoded.id, role: decoded.role, name: decoded.name })
 
         // ✅ store new refresh token with expiry (7 days)
         await redisClient.set(`refresh:${decoded.id}`, getToken.refreshToken, { EX: 7 * 24 * 60 * 60 });// 7 days in seconds
 
         return { accessToken: getToken.accessToken, refreshToken: getToken.refreshToken };
     } catch (error) {
-        console.log(error, "in the error of Register User Api")
+        console.log(error, "in the error of Refresh Token Api")
         return { success: false, status: 500, error: error };
     }
 };
 
+export async function VerifyToken(token: string) {
+    try {
+        let verifyResponse: any = verifyAccessToken(token)
+        if (verifyResponse.success === false && verifyResponse.code === "TOKEN_EXPIRED" && verifyResponse.statusCode === 401) return ({ success: false, code: "TOKEN_EXPIRED", message: "Access token expired", statusCode: 401 })
+        if (verifyResponse.success === false && verifyResponse.code === "INVALID_TOKEN" && verifyResponse.statusCode === 401) return ({ success: false, code: "INVALID_TOKEN", message: "Invalid access token", statusCode: 401 })
+        return verifyResponse
+    } catch (error) {
+        console.log(error, "In the error")
+        return error
+    }
+}
