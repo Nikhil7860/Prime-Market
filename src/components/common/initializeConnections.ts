@@ -7,5 +7,6 @@ export async function initializeConnections() {
         connectDB(),
         connectRedis(),
         connectRabbitMQ()
+        
     ]);
 }

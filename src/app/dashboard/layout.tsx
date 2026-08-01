@@ -4,6 +4,7 @@ import { useState } from "react";
 import DashboardSidebar from "@/components/user/dashboard/DashboardSidebar";
 import MobileSidebar from "@/components/user/dashboard/MobileSidebar";
 import DashboardNavbar from "@/components/user/dashboard/DashboardNavbar";
+import { SocketProvider } from "@/providers/SocketProvider";
 
 interface Props {
     children: React.ReactNode;
@@ -32,9 +33,9 @@ export default function DashboardLayout({ children }: Props) {
                 {/* Content */}
 
                 <main className="flex-1 p-4 md:p-8">
-
-                    {children}
-
+                    <SocketProvider>
+                        {children}
+                    </SocketProvider>
                 </main>
 
             </div>

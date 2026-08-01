@@ -66,8 +66,39 @@ export const verifyAccessToken = (token: string): JwtPayload => {
 };
 
 export const verifyRefreshToken = (token: string): JwtPayload => {
-    return jwt.verify(token, JWT_REFRESH_SECRET) as JwtPayload;
+    try {
+        return jwt.verify(token, JWT_REFRESH_SECRET) as JwtPayload;
+    } catch (error: any) {
+
+        if (error.name === "TokenExpiredError") {
+            return {
+                success: false,
+                code: "TOKEN_EXPIRED",
+                message: "Access token has expired",
+                expiredAt: error.expiredAt,
+                statusCode: 401
+            } as any;
+        }
+
+        if (error.name === "JsonWebTokenError") {
+            return {
+                success: false,
+                code: "INVALID_TOKEN",
+                message: "Invalid access token",
+                statusCode: 401
+            } as any;
+        }
+
+        return {
+            success: false,
+            code: "UNKNOWN_ERROR",
+            message: error.message,
+            statusCode: 500
+        } as any;
+    }
 };
+
+
 
 export const decodeToken = (token: string): JwtPayload | null => {
     return jwt.decode(token) as JwtPayload | null;

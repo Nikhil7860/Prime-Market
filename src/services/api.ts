@@ -39,8 +39,7 @@ API.interceptors.request.use(
 API.interceptors.response.use((response) => response, async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean; };
 
-    if (error.response?.status === 403) { return window.location.href = "/dashboard"; }
-    if (error.response?.status === 422) { return window.location.href = "/login"; }
+    // if (error.response?.status === 403) { return window.location.href = "/dashboard"; }
 
     if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
         if (isRefreshing) {
@@ -55,7 +54,7 @@ API.interceptors.response.use((response) => response, async (error: AxiosError) 
         const state: any = store.getState();
         const refreshToken = state.auth.refreshToken;
         console.log(refreshToken, "In the refreshToken")
-        if (refreshToken === "" || refreshToken === undefined) { return window.location.href = "/login"; }
+        if (refreshToken === null || refreshToken === "" || refreshToken === undefined) return window.location.href = "/login";
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`, { refreshToken, });
             if (response.data.success == false && response.data.status === 500) { return window.location.href = "/login"; }

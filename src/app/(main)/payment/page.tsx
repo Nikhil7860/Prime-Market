@@ -8,9 +8,12 @@ import { emptyTheCart } from "@/redux/cart/cartSlice";
 import { postRequest } from "@/services/apiMethods";
 import toast from "react-hot-toast";
 import { getCouponByCode, getCoupons } from "@/services/coupon.service";
+import { useSocket } from "@/providers/SocketProvider";
 
 export default function PaymentPage() {
     const router = useRouter();
+    const socket = useSocket();
+
     const dispatch = useAppDispatch();
     const cart: any = useAppSelector((state) => state.cart);
     const auth: any = useAppSelector((state) => state.auth);
@@ -36,7 +39,7 @@ export default function PaymentPage() {
             console.log(response, "IN THE response")
 
             if (!response?.data?.length) {
-                toast.error("Invalid coupon code. 8888888");
+                toast.error("Invalid coupon code.");
                 return;
             }
 
@@ -143,6 +146,27 @@ export default function PaymentPage() {
             setCouponLoading(false);
         }
     };
+
+
+
+
+    useEffect(() => {
+
+        const handleOrder = (order: any) => {
+
+            console.log(order);
+
+        };
+
+        socket.on("new-order", handleOrder);
+
+        return () => {
+
+            socket.off("new-order", handleOrder);
+
+        };
+
+    }, [socket]);
 
     // ---------------------------
     // SUCCESS

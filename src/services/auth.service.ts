@@ -7,6 +7,8 @@ import Role from "@/models/role";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+console.log("Imported Module:", Module?.modelName);
+
 export async function registerUser(data: any) {
     try {
         await initializeConnections();
@@ -95,13 +97,14 @@ export async function refreshUserToken(refreshToken: string) {
         if (!refreshToken) throw new Error("No refresh token");
 
         // ✅ verify token
-        // const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
-        const decoded = verifyRefreshToken(refreshToken)
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
 
         console.log(decoded, "In the decoded")
 
         // ✅ check in Redis
         const stored = await redisClient.get(`refresh:${decoded.id}`);
+
+        console.log(stored, "In the stored")
 
         if (!stored || stored !== refreshToken) throw new Error("Invalid refresh token");
 

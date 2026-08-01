@@ -1,8 +1,11 @@
 import { connectRabbitMQ } from "./rabbitmq";
 
-export async function publishMessage(queue: string, data: any) {
+const EXCHANGE = "ecommerce.events";
+
+export async function publishMessage(routingKey: string, data: any) {
     const { channel } = await connectRabbitMQ();
-    await channel.assertQueue(queue, { durable: true, });
-    let resp: any = channel.sendToQueue(queue, Buffer.from(JSON.stringify(data)), { persistent: true, });
-    return resp
+
+    await channel.assertExchange(EXCHANGE, "topic", { durable: true, });
+
+    channel.publish(EXCHANGE, routingKey, Buffer.from(JSON.stringify(data)), { persistent: true, });
 }

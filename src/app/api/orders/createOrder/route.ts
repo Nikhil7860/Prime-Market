@@ -10,6 +10,7 @@ export async function POST(request: Request) {
     try {
         let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
         if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
+
         await initializeConnections();
         const body = await request.json();
         const {
@@ -145,13 +146,7 @@ export async function POST(request: Request) {
         let rabbit: any = await publishMessage("order.created", order)
 
         console.log(rabbit, "In the rabbit")
-        // ======================================
 
-        // ======================================
-        // TODO
-        // Socket.IO
-        // io.emit("new-order", order)
-        // ======================================
 
         return NextResponse.json({ success: true, message: "Order created successfully.", data: order, }, { status: 201, });
 

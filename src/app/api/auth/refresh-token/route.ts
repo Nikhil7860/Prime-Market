@@ -5,9 +5,7 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        console.log(body.refreshToken, "In the body.refreshToken")
-
-        if (body.refreshToken === null) return NextResponse.json({ message: "Invalid token" }, { status: 422 });
+        if (body.refreshToken === null) return NextResponse.json({ message: "Invalid token" }, { status: 401 });
 
         const result = await refreshUserToken(body.refreshToken);
 

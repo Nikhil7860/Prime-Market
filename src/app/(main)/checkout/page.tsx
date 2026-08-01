@@ -10,7 +10,7 @@ import { postRequest } from "@/services/apiMethods";
 export default function CheckoutPage() {
     const router = useRouter();
 
-    const cart = useAppSelector((state) => state.cart);
+    const cart = useAppSelector((state: any) => state.cart);
 
     const user = useAppSelector((state: any) => state.auth.user);
 
