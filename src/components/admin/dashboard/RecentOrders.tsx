@@ -108,6 +108,9 @@ function statusIcon(status: string) {
 }
 
 export default function RecentOrders(recentorders: any) {
+
+    console.log(recentorders, "In the recentorders")
+
     return (
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
 
@@ -142,9 +145,6 @@ export default function RecentOrders(recentorders: any) {
 
                         <tr className="border-b border-slate-200 dark:border-slate-700">
 
-                            <th className="px-6 py-4 text-left text-sm font-semibold">
-                                Order ID
-                            </th>
 
                             <th className="px-6 py-4 text-left text-sm font-semibold">
                                 Customer
@@ -176,12 +176,7 @@ export default function RecentOrders(recentorders: any) {
 
                             <tr
                                 key={order._id}
-                                className="border-b border-slate-100 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800"
-                            >
-
-                                <td className="px-6 py-5 font-semibold">
-                                    {order._id}
-                                </td>
+                                className="border-b border-slate-100 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
 
                                 <td className="px-6 py-5">
 
@@ -189,7 +184,7 @@ export default function RecentOrders(recentorders: any) {
 
                                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white font-semibold">
 
-                                            {/* {order.customer.split(" ").map((x: any) => x[0]).join("").slice(0, 2)} */}
+                                            {order.user.name.split(" ").map((x: any) => x[0]).join("").slice(0, 2)}
 
                                         </div>
 
@@ -240,7 +235,16 @@ export default function RecentOrders(recentorders: any) {
                                 </td>
 
                                 <td className="px-6 py-5 text-slate-500">
-                                    {order.date}
+                                    {new Date(order.createdAt).toLocaleString("en-IN", {
+                                        timeZone: "Asia/Kolkata",
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        second: "2-digit",
+                                        hour12: true,
+                                    })}
                                 </td>
 
                             </tr>

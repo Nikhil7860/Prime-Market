@@ -16,7 +16,7 @@ export function SocketProvider({ children, }: { children: React.ReactNode; }) {
         socket.connect();
 
         socket.on("connect", () => {
-            console.log("✅ Connected:", socket.id);
+            console.log("✅ Connected:", socket.id, 11111111111);
         });
 
         socket.on("disconnect", () => {

@@ -40,12 +40,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
             Order.find({ user: userId })
                 .sort({ createdAt: -1, })
-                .limit(5)
                 .populate("products.product", "name images"),
 
             Order.find({ user: userId, paymentStatus: "Paid", })
                 .sort({ createdAt: -1, })
-                .limit(5)
                 .select("transactionId amount paymentMethod paymentStatus createdAt"),
         ]);
 

@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { VerifyToken } from "@/services/auth.service";
 
-export async function POST(request: Request) {
+export async function PUT(request: Request) {
     try {
         let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
         if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
@@ -13,6 +13,17 @@ export async function POST(request: Request) {
         await initializeConnections();
 
         const body = await request.json();
+
+        const currentPasswordhash = await bcrypt.hash(body.currentPassword, 10);
+
+
+        const user = await User.findOne({
+            _id: body.id,
+            password: currentPasswordhash,
+        });
+
+
+        console.log(user, "in the user")
 
         const hashed = await bcrypt.hash(body.newPassword, 10);
 

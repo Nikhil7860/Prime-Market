@@ -550,7 +550,7 @@ export default function CouponsSection() {
                                                 <Power size={18} />
                                             </button>
 
-                                            <button style={{ backgroundColor: 'red' }} onClick={() => handleDelete(coupon._id)}>
+                                            <button className="rounded bg-red-500 px-3 py-1 text-white text-sm" onClick={() => handleDelete(coupon._id)}>
                                                 <Trash2 size={18} />
                                             </button>
 

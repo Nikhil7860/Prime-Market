@@ -55,6 +55,8 @@ interface Props {
 }
 
 export default function ProductCard({ product }: Props) {
+
+    console.log(product, "In the product")
     const router = useRouter();
 
     const dispatch = useAppDispatch();

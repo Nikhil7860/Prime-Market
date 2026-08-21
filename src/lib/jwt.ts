@@ -67,8 +67,12 @@ export const verifyAccessToken = (token: string): JwtPayload => {
 
 export const verifyRefreshToken = (token: string): JwtPayload => {
     try {
-        return jwt.verify(token, JWT_REFRESH_SECRET) as JwtPayload;
+        let tokenResult = jwt.verify(token, JWT_REFRESH_SECRET) as JwtPayload;
+        console.log(tokenResult, "In the tokenResult")
+        return tokenResult
     } catch (error: any) {
+
+        console.log(error, "In the error")
 
         if (error.name === "TokenExpiredError") {
             return {

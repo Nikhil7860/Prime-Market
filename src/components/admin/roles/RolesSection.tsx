@@ -209,7 +209,7 @@ export default function RolesSection() {
 
                                         <button
                                             onClick={() => deleteRole(role._id)}
-                                            className="rounded bg-black px-3 py-1 text-white text-sm"
+                                            className="rounded bg-red-500 px-3 py-1 text-white text-sm"
                                         >
                                             <Trash2 size={18} />
                                         </button>

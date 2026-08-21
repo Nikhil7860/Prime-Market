@@ -15,11 +15,10 @@ export async function PUT(request: Request) {
 
         const body = await request.json();
 
-        const { id, name, email, phone, role, roleId, status, password } = body
+        const { id, name, email, phone } = body
 
-        const hashed = await bcrypt.hash(password, 10);
 
-        const updateUser = await User.findByIdAndUpdate(id, { name: name, email: email, phone: phone, role: role, status: status, password: hashed, roleId: roleId }, { new: true, runValidators: true, });
+        const updateUser = await User.findByIdAndUpdate(id, { name: name, email: email, phone: phone }, { new: true, runValidators: true, });
 
         if (!updateUser) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });

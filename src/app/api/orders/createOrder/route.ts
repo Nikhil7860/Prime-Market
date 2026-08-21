@@ -26,6 +26,12 @@ export async function POST(request: Request) {
             status,
         } = body;
 
+        if (!products?.length) {
+
+            return NextResponse.json({ success: false, message: "Cart is empty", }, { status: 400 });
+        }
+
+
         let grandTotal = 0;
         const orderItems = [];
 
@@ -70,7 +76,7 @@ export async function POST(request: Request) {
             orderItems.push({
                 product: product._id,
                 productName: product.name,
-                image: product.images?.[0]?.image || "",
+                image: product.images || [],
                 quantity: item.quantity,
                 price: product.price,
                 total: itemTotal,

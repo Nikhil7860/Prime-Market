@@ -38,7 +38,11 @@ export default function HomePage() {
     try {
       const data: any = await getProducts();
 
+      console.log(data, "in the data")
+
       const productList = Array.isArray(data) ? data : [];
+
+      console.log(productList, "In the productList")
 
       setProductList(productList);
 
@@ -53,11 +57,21 @@ export default function HomePage() {
   };
 
 
-  const groupedProducts = productList.reduce((acc: any, product: any) => {
-    if (!acc[product.category]) acc[product.categoryName] = [];
-    acc[product.categoryName].push(product);
+  const groupedProducts = productList.reduce((acc: Record<string, any[]>, product: any) => {
+
+    const categoryName = product.categoryName;
+
+    if (!acc[categoryName]) {
+      acc[categoryName] = [];
+    }
+
+    acc[categoryName].push(product);
+
     return acc;
+
   }, {});
+
+  console.log(groupedProducts, "In the groupedProducts")
 
   return (
     <>

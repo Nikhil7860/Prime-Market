@@ -62,73 +62,97 @@ export default function DashboardHome() {
             />
 
             <div className="grid gap-8 lg:grid-cols-2">
+
                 <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-6 backdrop-blur-xl">
                     <h2 className="mb-6 text-2xl font-bold text-white">
                         Recent Orders
                     </h2>
 
-                    <div className="space-y-4">
+
+                    <div className="max-h-[600px] space-y-4 overflow-y-auto pr-2 custom-scrollbar">
                         {dashboard?.recentOrders?.length > 0 ? (
-                            dashboard.recentOrders.map((order: any) => (
-                                <div
-                                    key={order._id}
-                                    className="flex items-center justify-between rounded-xl bg-slate-800 p-4 transition hover:bg-slate-700"
-                                >
-                                    {/* Left */}
-                                    <div className="flex items-center gap-4">
-                                        <img
-                                            src={
-                                                order.products?.[0]?.image ||
-                                                "/placeholder-product.png"
-                                            }
-                                            alt={order.products?.[0]?.productName}
-                                            className="h-14 w-14 rounded-lg object-cover"
-                                        />
 
-                                        <div>
-                                            <h3 className="font-semibold text-white">
-                                                {order.products?.[0]?.productName}
-                                            </h3>
+                            <div className="max-h-[600px] space-y-4 overflow-y-auto pr-2 custom-scrollbar">
 
-                                            <p className="text-sm text-slate-400">
-                                                {order.userDetails?.name}
+                                {dashboard.recentOrders.map((order: any) => (
+                                    <div
+                                        key={order._id}
+                                        className="flex items-center justify-between rounded-2xl border border-slate-700 bg-slate-800/70 p-4 transition-all duration-300 hover:border-blue-500 hover:bg-slate-800"
+                                    >
+
+                                        <div className="flex min-w-0 items-center gap-4">
+
+                                            <img
+                                                src={
+                                                    order.products?.[0]?.image ||
+                                                    "/placeholder-product.png"
+                                                }
+                                                alt={
+                                                    order.products?.[0]?.productName ||
+                                                    "Product"
+                                                }
+                                                className="h-14 w-14 shrink-0 rounded-lg object-cover"
+                                            />
+
+                                            <div className="min-w-0">
+                                                <h3 className="truncate font-semibold text-white">
+                                                    {order.products?.[0]?.productName ||
+                                                        "Unknown Product"}
+                                                </h3>
+
+                                                <p className="truncate text-sm text-slate-400">
+                                                    {order.userDetails?.name ||
+                                                        "Unknown User"}
+                                                </p>
+
+                                                <p className="text-xs text-slate-500">
+                                                    Order #{order._id?.slice(-6)}
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                        <div className="ml-4 shrink-0 text-right">
+
+                                            <p className="font-bold text-white">
+                                                ₹
+                                                {Number(order.amount || 0).toLocaleString(
+                                                    "en-IN"
+                                                )}
                                             </p>
 
-                                            <p className="text-xs text-slate-500">
-                                                Order #{order._id.slice(-6)}
+                                            <span
+                                                className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${order.status === "paid"
+                                                    ? "bg-green-500/20 text-green-400"
+                                                    : order.status === "pending"
+                                                        ? "bg-yellow-500/20 text-yellow-400"
+                                                        : "bg-red-500/20 text-red-400"
+                                                    }`}
+                                            >
+                                                {order.status}
+                                            </span>
+
+                                            <p className="mt-1 text-xs text-slate-500">
+                                                {order.createdAt
+                                                    ? new Date(
+                                                        order.createdAt
+                                                    ).toLocaleDateString("en-IN")
+                                                    : "-"}
                                             </p>
+
                                         </div>
                                     </div>
-
-                                    {/* Right */}
-                                    <div className="text-right">
-                                        <p className="font-bold text-white">
-                                            ₹{order.amount.toLocaleString()}
-                                        </p>
-
-                                        <span
-                                            className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${order.status === "paid"
-                                                ? "bg-green-500/20 text-green-400"
-                                                : order.status === "pending"
-                                                    ? "bg-yellow-500/20 text-yellow-400"
-                                                    : "bg-red-500/20 text-red-400"
-                                                }`}
-                                        >
-                                            {order.status}
-                                        </span>
-
-                                        <p className="mt-1 text-xs text-slate-500">
-                                            {new Date(order.createdAt).toLocaleDateString()}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))
+                                ))}
+                            </div>
                         ) : (
                             <div className="rounded-xl bg-slate-800 p-8 text-center text-slate-400">
                                 No recent orders found.
                             </div>
                         )}
                     </div>
+
+
+
                 </div>
 
                 <div className="rounded-3xl border border-white/10 bg-slate-900/60 p-6 backdrop-blur-xl">
@@ -137,19 +161,26 @@ export default function DashboardHome() {
                     </h2>
 
                     {transacations?.length > 0 ? (
-                        <div className="space-y-4">
+
+                        <div className="max-h-[600px] space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+
                             {transacations.map((item: any) => {
+
                                 const isCredit =
-                                    item.type === "deposit" || item.type === "refund";
+                                    item.type === "deposit" ||
+                                    item.type === "refund";
 
                                 return (
                                     <div
                                         key={item._id}
                                         className="flex items-center justify-between rounded-2xl border border-slate-700 bg-slate-800/70 p-4 transition-all duration-300 hover:border-blue-500 hover:bg-slate-800"
                                     >
+
+                                        {/* Left */}
                                         <div className="flex items-center gap-4">
+
                                             <div
-                                                className={`flex h-12 w-12 items-center justify-center rounded-full text-xl ${isCredit
+                                                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xl ${isCredit
                                                     ? "bg-green-500/20 text-green-400"
                                                     : "bg-red-500/20 text-red-400"
                                                     }`}
@@ -158,11 +189,13 @@ export default function DashboardHome() {
                                             </div>
 
                                             <div>
+
                                                 <h3 className="font-semibold text-white">
                                                     {item.description}
                                                 </h3>
 
                                                 <div className="mt-1 flex items-center gap-3">
+
                                                     <span className="rounded-full bg-slate-700 px-2 py-1 text-xs capitalize text-slate-300">
                                                         {item.type}
                                                     </span>
@@ -177,10 +210,13 @@ export default function DashboardHome() {
                                                     >
                                                         {item.status}
                                                     </span>
+
                                                 </div>
 
                                                 <p className="mt-2 text-xs text-slate-400">
-                                                    {new Date(item.createdAt).toLocaleString(
+                                                    {new Date(
+                                                        item.createdAt
+                                                    ).toLocaleString(
                                                         "en-IN",
                                                         {
                                                             day: "2-digit",
@@ -191,10 +227,14 @@ export default function DashboardHome() {
                                                         }
                                                     )}
                                                 </p>
+
                                             </div>
                                         </div>
 
-                                        <div className="text-right">
+
+                                        {/* Right */}
+                                        <div className="shrink-0 text-right">
+
                                             <p
                                                 className={`text-lg font-bold ${isCredit
                                                     ? "text-green-400"
@@ -204,14 +244,22 @@ export default function DashboardHome() {
                                                 {isCredit ? "+" : "-"} ₹
                                                 {item.amount.toLocaleString("en-IN")}
                                             </p>
+
                                         </div>
+
                                     </div>
                                 );
                             })}
+
                         </div>
+
                     ) : (
+
                         <div className="flex h-56 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-800/30">
-                            <div className="mb-3 text-5xl">💳</div>
+
+                            <div className="mb-3 text-5xl">
+                                💳
+                            </div>
 
                             <h3 className="text-lg font-semibold text-white">
                                 No Transactions Found
@@ -220,7 +268,9 @@ export default function DashboardHome() {
                             <p className="mt-2 text-center text-sm text-slate-400">
                                 Your recent wallet transactions will appear here.
                             </p>
+
                         </div>
+
                     )}
                 </div>
             </div>

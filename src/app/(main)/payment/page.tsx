@@ -147,25 +147,20 @@ export default function PaymentPage() {
         }
     };
 
-
-
-
     useEffect(() => {
+        const handleNewOrder = (order: any) => {
+            console.log("🛒 New Order:", order);
 
-        const handleOrder = (order: any) => {
+            // Update state or refetch orders
 
-            console.log(order);
-
+            alert(1111)
         };
 
-        socket.on("new-order", handleOrder);
+        socket.on("new-order", handleNewOrder);
 
         return () => {
-
-            socket.off("new-order", handleOrder);
-
+            socket.off("new-order", handleNewOrder);
         };
-
     }, [socket]);
 
     // ---------------------------

@@ -97,7 +97,7 @@ export default function CheckoutPage() {
                                     </h2>
 
                                     <p className="mt-2 text-sm text-blue-400">
-                                        category : {item.category}
+                                        category : {item.categoryName}
                                     </p>
 
                                     <p className="mt-2 line-clamp-2 text-sm text-slate-400">

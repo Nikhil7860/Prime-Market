@@ -27,8 +27,8 @@ export async function registerUser(data: any) {
             email: data.email,
             phone: data.phone,
             password: hashed,
-            role: roleResp.roleName,
-            roleId: roleResp._id
+            role: roleResp ? roleResp?.roleName : "user",
+            roleId: roleResp ? roleResp._id : "6a536222d4a0dc03794e709b"
         });
         return { success: true, status: 201, data: user };
     } catch (error) {
@@ -41,9 +41,9 @@ export async function loginUser(data: any) {
     try {
         await initializeConnections()
         const user = await User.findOne({ email: data.email });
-        if (!user) throw new Error("User not found");
+        if (!user) return "User not found";
         const isMatch = await bcrypt.compare(data.password, user.password);
-        if (!isMatch) throw new Error("Invalid password");
+        if (!isMatch) return "Invalid password";
         const token = generateToken({ id: user._id.toString(), role: user.role, name: user.name });
         await redisClient.set(`refresh:${user._id}`, token.refreshToken, { EX: 7 * 24 * 60 * 60 });
         const populatedUser = await User.findById(user._id).populate({ path: "roleId", populate: { path: "permissions.module" } });
@@ -62,7 +62,6 @@ export async function loginUser(data: any) {
 }
 
 export async function logoutUser(req: any) {
-    console.log(req, "IN the Req")
     try {
         const authHeader = req.headers.authorization;
 
@@ -97,9 +96,7 @@ export async function refreshUserToken(refreshToken: string) {
         if (!refreshToken) throw new Error("No refresh token");
 
         // ✅ verify token
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
-
-        console.log(decoded, "In the decoded")
+        const decoded = verifyRefreshToken(refreshToken);
 
         // ✅ check in Redis
         const stored = await redisClient.get(`refresh:${decoded.id}`);
