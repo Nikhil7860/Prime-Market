@@ -31,7 +31,7 @@ async function start() {
 
         // console.log(order);
 
-        io.emit("new-order", order);
+        // io.emit("new-order", order);
 
         console.log("Message Sent To Socket as new-order")
 

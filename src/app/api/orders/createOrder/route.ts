@@ -13,18 +13,7 @@ export async function POST(request: Request) {
 
         await initializeConnections();
         const body = await request.json();
-        const {
-            products,
-            userDetails,
-            paymentStatus,
-            transactionId,
-            paymentMethod,
-            gateway,
-            currency,
-            couponCode,
-            discount = 0,
-            status,
-        } = body;
+        const { products, userDetails, paymentStatus, transactionId, paymentMethod, gateway, currency, couponCode, discount = 0, status } = body;
 
         if (!products?.length) {
 
@@ -33,7 +22,7 @@ export async function POST(request: Request) {
 
 
         let grandTotal = 0;
-        const orderItems = [];
+        const orderItems: any = [];
 
         let coupon = null;
 
@@ -76,7 +65,7 @@ export async function POST(request: Request) {
             orderItems.push({
                 product: product._id,
                 productName: product.name,
-                image: product.images || [],
+                image: product.images?.[0]?.image || "",
                 quantity: item.quantity,
                 price: product.price,
                 total: itemTotal,
@@ -158,7 +147,7 @@ export async function POST(request: Request) {
 
     } catch (error: any) {
 
-        console.error(error);
+        console.error(error, "In the Error");
 
         return NextResponse.json({ success: false, message: error.message, }, { status: 400, });
     }

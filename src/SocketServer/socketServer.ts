@@ -1,7 +1,9 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
+import "dotenv/config";
 
 const httpServer = createServer();
+const PORT = Number(process.env.SOCKET_PORT) || 4500;
 
 export const io = new Server(httpServer, {
     cors: {
@@ -20,6 +22,6 @@ io.on("connection", (socket) => {
 
 });
 
-httpServer.listen(4500, () => {
-    console.log("Socket Server Running on 4500");
+httpServer.listen(PORT, () => {
+    console.log(`Socket Server Running on ${PORT}`);
 });
