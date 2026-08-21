@@ -140,8 +140,6 @@ export async function POST(request: Request) {
         // RabbitMQ
         let rabbit: any = await publishMessage("order.created", order)
 
-        console.log(rabbit, "In the rabbit")
-
 
         return NextResponse.json({ success: true, message: "Order created successfully.", data: order, }, { status: 201, });
 

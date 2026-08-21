@@ -44,8 +44,6 @@ export default function ProductsPage() {
     const [rating, setRating] = useState(0);
     const [inStock, setInStock] = useState(false);
 
-    console.log(urlCategory, "in the urlCategory")
-
     useEffect(() => {
         const selectedCategory: any = urlCategory;
         setCategory(selectedCategory);

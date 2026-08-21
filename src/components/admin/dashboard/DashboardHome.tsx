@@ -33,7 +33,6 @@ export default function DashboardHome() {
         try {
             setLoading(true);
             const response: any = await getRequest("admin/dashboard");
-            console.log(response.data, "response.data in the Dashboard")
             setDashboard(response.data);
         } catch (err) {
             console.log(err);

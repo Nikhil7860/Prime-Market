@@ -109,8 +109,6 @@ function statusIcon(status: string) {
 
 export default function RecentOrders(recentorders: any) {
 
-    console.log(recentorders, "In the recentorders")
-
     return (
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
 

@@ -10,7 +10,6 @@ export async function GET(request: Request) {
         let tokenVerification: any = await VerifyToken(request.headers.get("authorization")?.split(" ")[1] as string)
         if (tokenVerification.success === false) return NextResponse.json(tokenVerification, { status: tokenVerification.statusCode })
         let userRole = decodeToken(request.headers.get("authorization")?.split(" ")[1] as string)
-        console.log(userRole, "In the userRole")
         if (userRole?.role === "user") return NextResponse.json({ message: "Not Admin", }, { status: 403 });
         await initializeConnections();
         const OrdersResponse = await Orders.find();

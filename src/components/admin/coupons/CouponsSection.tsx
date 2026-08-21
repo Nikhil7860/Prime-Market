@@ -269,7 +269,6 @@ export default function CouponsSection() {
 
             if (isEdit) {
                 let reponse = await updateCoupon({ id: selectedCoupon?._id, ...form });
-                console.log(reponse, "IN THE RESPONSE")
             } else {
                 await createCoupon(form);
             }
@@ -291,7 +290,6 @@ export default function CouponsSection() {
 
             let resp = fetchCoupons();
 
-            console.log(resp, "in the resp")
         } catch (error) {
             console.log(error);
         }

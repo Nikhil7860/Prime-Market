@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import ToggleSwitch from "./ToggleSwitch";
 import { getRoles, updateRolePermissions } from "@/services/role.service";
 import { getModules } from "@/services/module.service";
+import toast from "react-hot-toast";
+
 
 /*  ========================================================
                         TYPES
@@ -283,15 +285,17 @@ export default function RolePermissionManager() {
                     permissions: module.permissions,
                 }));
 
-            await updateRolePermissions({
+            let response: any = await updateRolePermissions({
                 roleId: selectedRole,
                 permissions: updatedRole,
             });
 
-            setModulePermissions([])
-            setSelectedRole("")
+            if (response.success) {
+                setModulePermissions([])
+                setSelectedRole("")
+                toast.success(response.message);
+            }
 
-            alert("Permissions saved successfully.");
         } catch (err) {
             console.log(err);
             alert("Something went wrong.");

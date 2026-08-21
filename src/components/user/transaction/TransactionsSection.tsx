@@ -28,7 +28,6 @@ export default function Transactions() {
     const fetchTransactions = async () => {
         try {
             const data: any = await getTransactionById(userDetails._id)
-            console.log(data, "IN THE data")
             setTransactions(Array.isArray(data) ? data : data.transactions || []);
         } catch (error) {
             console.log(error);

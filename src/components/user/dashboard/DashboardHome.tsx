@@ -19,7 +19,6 @@ export default function DashboardHome() {
 
     const fetchDashboard = async (id: string) => {
         const res = await getRequest(`users/dashboard/${id}`);
-        console.log(res, res)
         setDashboard(res);
     };
 

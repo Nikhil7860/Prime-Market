@@ -39,7 +39,6 @@ export default function ProductFilters({
     onStockChange,
     onClearFilters }: ProductFiltersProps) {
 
-    console.log(category, "In the category 1111111121321")
 
     return (
         <div className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6 backdrop-blur-xl">

@@ -38,11 +38,7 @@ export default function HomePage() {
     try {
       const data: any = await getProducts();
 
-      console.log(data, "in the data")
-
       const productList = Array.isArray(data) ? data : [];
-
-      console.log(productList, "In the productList")
 
       setProductList(productList);
 
@@ -70,8 +66,6 @@ export default function HomePage() {
     return acc;
 
   }, {});
-
-  console.log(groupedProducts, "In the groupedProducts")
 
   return (
     <>

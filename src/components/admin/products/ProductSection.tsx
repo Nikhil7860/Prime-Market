@@ -126,7 +126,6 @@ export default function ProductSection() {
     //---------------------------------------
 
     const filteredProducts = useMemo(() => {
-        console.log(products, "In the products")
         return products.filter(
             (product) =>
                 product.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -152,7 +151,6 @@ export default function ProductSection() {
     //---------------------------------------
 
     const openEditModal = (product: Product) => {
-        console.log(product, "product")
         setSelectedProduct(product);
         setForm({
             name: product.name,
@@ -212,8 +210,6 @@ export default function ProductSection() {
 
             let imageUrls: any = [];
 
-            console.log(imageFiles, "imageFiles")
-
             if (imageFiles.length > 0) {
 
 
@@ -247,11 +243,7 @@ export default function ProductSection() {
                 userId: user._id
             };
 
-            console.log(payload, "Product payload");
-
             const response = await putRequest("products/updateProduct", payload);
-
-            console.log(response, "in the response of Product Creationu")
 
             toast.success("Product Updated Sucessfully");
 
@@ -286,11 +278,7 @@ export default function ProductSection() {
                 imageUrls = await Promise.all(imageFiles.map((item) => uploadToCloudinary(item.file)));
             }
 
-            console.log(imageUrls, "Cloudinary image URLs");
-
             const images = imageFiles.map((item, index) => ({ image: imageUrls[index], name: item.file.name, }));
-
-            console.log(images, "Final images");
 
             const payload = {
                 name: form.name,
@@ -302,10 +290,7 @@ export default function ProductSection() {
                 isActive: form.isActive,
                 userId: user._id
             };
-
-            console.log(payload, "Product payload");
             const response = await postRequest("products/addProduct", payload);
-            console.log(response, "in the response of Product Creationu")
             toast.success("Product Created Sucessfully");
 
             setCreateOpen(false);
@@ -362,7 +347,6 @@ export default function ProductSection() {
 
         const data = await res.json();
 
-        console.log(data, "data ")
 
         if (!res.ok) {
             console.error("Cloudinary error:", data);

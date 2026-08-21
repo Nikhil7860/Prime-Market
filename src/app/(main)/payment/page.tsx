@@ -36,16 +36,12 @@ export default function PaymentPage() {
 
             const response: any = await getCouponByCode(couponCode.toUpperCase());
 
-            console.log(response, "IN THE response")
-
             if (!response?.data?.length) {
                 toast.error("Invalid coupon code.");
                 return;
             }
 
             const coupon = response.data[0];
-
-            console.log(coupon, "IN the coupon")
 
             // Prevent applying same coupon twice
             if (appliedCoupon === coupon.code) {
@@ -65,7 +61,6 @@ export default function PaymentPage() {
 
             // Coupon not started
             if (now < startDate) {
-                console.log("50000000000000000000000")
                 toast.error("This coupon is not active yet.");
                 return;
             }

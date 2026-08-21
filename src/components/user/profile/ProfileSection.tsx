@@ -62,7 +62,6 @@ export default function Profile() {
 
     const fetchUserById = async () => {
         let userById: any = await postRequest("/users/getUserProfile", { id: user._id })
-        console.log(userById, "userById")
         setUserbyId(userById)
     }
 
@@ -132,12 +131,8 @@ export default function Profile() {
                 id: user._id
             };
 
-            console.log(payload, "Update Profile Payload");
-
             // Example:
             const response = await putRequest("users/updateUser", payload);
-
-            console.log(response, "In the response")
 
             setIsEditing(false);
 
@@ -314,8 +309,6 @@ export default function Profile() {
                 newPassword,
                 id: user._id
             };
-
-            console.log(payload, "Change Password Payload");
 
             await putRequest("users/changePassword", payload);
 

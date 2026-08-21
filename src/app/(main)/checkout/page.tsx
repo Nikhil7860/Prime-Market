@@ -33,8 +33,6 @@ export default function CheckoutPage() {
                 paidAt: new Date(),
             };
 
-            console.log(paymentObj, "paymentObj");
-
             // await postRequest("/payment/paymentInit", paymentObj);
 
             router.push("/payment");
