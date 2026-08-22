@@ -13,13 +13,10 @@ export const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-
-    console.log("Client Connected:", socket.id);
-
+    console.log("✅ Connected:", "Client Connected:", socket.id);
     socket.on("disconnect", () => {
-        console.log("Client Disconnected:", socket.id);
+        console.log("❌ Disconnected:Client Disconnected", socket.id);
     });
-
 });
 
 httpServer.listen(PORT, () => {

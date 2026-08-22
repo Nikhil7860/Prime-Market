@@ -1,6 +1,5 @@
-import amqp from "amqplib";
-import type { Channel, Connection } from "amqplib";
 import "dotenv/config";
+import amqp from "amqplib";
 let connection: any | null = null;
 let channel: any | null = null;
 
@@ -15,6 +14,8 @@ export async function connectRabbitMQ() {
     connection = await amqp.connect(url);
 
     channel = await connection.createChannel();
+
+    console.log("✅ Connected:", "RABBITMQ Sucessfully Connected");
 
     return { connection, channel };
 }

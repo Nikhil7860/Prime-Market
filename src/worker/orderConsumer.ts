@@ -12,8 +12,6 @@ async function start() {
 
     const { channel } = await connectRabbitMQ();
 
-    console.log("RabbitMQ Connected");
-
     await channel.assertExchange(EXCHANGE, "topic", { durable: true });
 
     await channel.assertQueue(QUEUE, { durable: true });
