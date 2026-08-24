@@ -36,7 +36,7 @@ export default function DashboardHome() {
 
     return (
         <div className="w-full max-w-full overflow-x-hidden space-y-6 sm:space-y-8 lg:space-y-10 px-4 sm:px-6 lg:px-0">
-            <div className="min-w-0">
+            <div>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
                     Welcome Back 👋
                 </h1>
@@ -53,16 +53,14 @@ export default function DashboardHome() {
                 </Link>
             </div>
 
-            <div className="w-full min-w-0 overflow-x-hidden">
-                <DashboardStats
-                    totalOrders={dashboard?.stats?.totalOrders || 0}
-                    delivered={dashboard?.stats?.delivered || 0}
-                    pending={dashboard?.stats?.pending || 0}
-                    totalSpent={dashboard?.stats?.totalSpent || 0}
-                />
-            </div>
+            <DashboardStats
+                totalOrders={dashboard?.stats?.totalOrders || 0}
+                delivered={dashboard?.stats?.delivered || 0}
+                pending={dashboard?.stats?.pending || 0}
+                totalSpent={dashboard?.stats?.totalSpent || 0}
+            />
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8 min-w-0">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
 
                 <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-slate-900/60 p-4 sm:p-6 backdrop-blur-xl">
                     <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white">
@@ -73,7 +71,8 @@ export default function DashboardHome() {
                     <div className="max-h-[420px] sm:max-h-[500px] lg:max-h-[600px] space-y-3 sm:space-y-4 overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
                         {dashboard?.recentOrders?.length > 0 ? (
 
-                            <>
+                            <div className="max-h-[420px] sm:max-h-[500px] lg:max-h-[600px] space-y-3 sm:space-y-4 overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
+
                                 {dashboard.recentOrders.map((order: any) => (
                                     <div
                                         key={order._id}
@@ -109,20 +108,12 @@ export default function DashboardHome() {
                                                     Order #{order._id?.slice(-6)}
                                                 </p>
                                             </div>
-
-                                            {/* Amount inline on mobile, hidden here on sm+ where it moves to the right column */}
-                                            <p className="shrink-0 font-bold text-white text-sm sm:hidden">
-                                                ₹
-                                                {Number(order.amount || 0).toLocaleString(
-                                                    "en-IN"
-                                                )}
-                                            </p>
                                         </div>
 
 
-                                        <div className="flex w-full sm:w-auto max-w-full shrink-0 items-center justify-between sm:block sm:text-right">
+                                        <div className="ml-0 sm:ml-4 w-full sm:w-auto shrink-0 text-right">
 
-                                            <p className="hidden sm:block font-bold text-white">
+                                            <p className="font-bold text-white">
                                                 ₹
                                                 {Number(order.amount || 0).toLocaleString(
                                                     "en-IN"
@@ -151,7 +142,7 @@ export default function DashboardHome() {
                                         </div>
                                     </div>
                                 ))}
-                            </>
+                            </div>
                         ) : (
                             <div className="rounded-xl bg-slate-800 p-6 sm:p-8 text-center text-sm sm:text-base text-slate-400">
                                 No recent orders found.
@@ -185,7 +176,7 @@ export default function DashboardHome() {
                                     >
 
                                         {/* Left */}
-                                        <div className="flex w-full items-center gap-3 sm:gap-4">
+                                        <div className="flex min-w-0 w-full items-center gap-3 sm:gap-4">
 
                                             <div
                                                 className={`flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full text-lg sm:text-xl ${isCredit
@@ -196,7 +187,7 @@ export default function DashboardHome() {
                                                 {isCredit ? "⬇" : "⬆"}
                                             </div>
 
-                                            <div className="min-w-0 flex-1">
+                                            <div className="min-w-0">
 
                                                 <h3 className="break-words text-sm sm:text-base font-semibold text-white">
                                                     {item.description}
@@ -237,23 +228,14 @@ export default function DashboardHome() {
                                                 </p>
 
                                             </div>
-
-                                            {/* Amount inline on mobile */}
-                                            <p
-                                                className={`shrink-0 text-sm font-bold sm:hidden ${isCredit ? "text-green-400" : "text-red-400"
-                                                    }`}
-                                            >
-                                                {isCredit ? "+" : "-"} ₹
-                                                {item.amount.toLocaleString("en-IN")}
-                                            </p>
                                         </div>
 
 
-                                        {/* Right (desktop only) */}
-                                        <div className="hidden sm:block shrink-0 text-right">
+                                        {/* Right */}
+                                        <div className="ml-0 sm:ml-4 w-full sm:w-auto shrink-0 text-right">
 
                                             <p
-                                                className={`text-lg font-bold ${isCredit
+                                                className={`text-base sm:text-lg font-bold ${isCredit
                                                     ? "text-green-400"
                                                     : "text-red-400"
                                                     }`}
