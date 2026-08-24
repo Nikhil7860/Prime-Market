@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import Order from "@/models/Orders";
 import User from "@/models/User";
+import Product from "@/models/Product";
 
 import { initializeConnections } from "@/components/common/initializeConnections";
 import { VerifyToken } from "@/services/auth.service";
@@ -18,14 +19,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
         const userId = new mongoose.Types.ObjectId(id);
 
-        const [
-            totalOrders,
-            delivered,
-            pending,
-            totalSpentResult,
-            recentOrders,
-            recentTransactions,
-        ] = await Promise.all([
+        const [totalOrders, delivered, pending, totalSpentResult, recentOrders, recentTransactions] = await Promise.all([
 
             Order.countDocuments({ user: userId, }),
 
