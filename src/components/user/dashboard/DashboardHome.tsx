@@ -35,8 +35,8 @@ export default function DashboardHome() {
     }
 
     return (
-        <div className="space-y-6 sm:space-y-8 lg:space-y-10 px-4 sm:px-6 lg:px-0">
-            <div>
+        <div className="w-full max-w-full overflow-x-hidden space-y-6 sm:space-y-8 lg:space-y-10 px-4 sm:px-6 lg:px-0">
+            <div className="min-w-0">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
                     Welcome Back 👋
                 </h1>
@@ -53,14 +53,16 @@ export default function DashboardHome() {
                 </Link>
             </div>
 
-            <DashboardStats
-                totalOrders={dashboard?.stats?.totalOrders || 0}
-                delivered={dashboard?.stats?.delivered || 0}
-                pending={dashboard?.stats?.pending || 0}
-                totalSpent={dashboard?.stats?.totalSpent || 0}
-            />
+            <div className="w-full min-w-0 overflow-x-hidden">
+                <DashboardStats
+                    totalOrders={dashboard?.stats?.totalOrders || 0}
+                    delivered={dashboard?.stats?.delivered || 0}
+                    pending={dashboard?.stats?.pending || 0}
+                    totalSpent={dashboard?.stats?.totalSpent || 0}
+                />
+            </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8 min-w-0">
 
                 <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-slate-900/60 p-4 sm:p-6 backdrop-blur-xl">
                     <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white">
@@ -118,7 +120,7 @@ export default function DashboardHome() {
                                         </div>
 
 
-                                        <div className="flex w-full sm:w-auto shrink-0 items-center justify-between sm:block sm:text-right pl-[60px] sm:pl-0">
+                                        <div className="flex w-full sm:w-auto max-w-full shrink-0 items-center justify-between sm:block sm:text-right">
 
                                             <p className="hidden sm:block font-bold text-white">
                                                 ₹
@@ -128,7 +130,7 @@ export default function DashboardHome() {
                                             </p>
 
                                             <span
-                                                className={`inline-block rounded-full px-2.5 sm:px-3 py-1 text-xs font-semibold ${order.status === "paid"
+                                                className={`inline-block rounded-full px-2.5 sm:px-3 py-1 text-xs font-semibold whitespace-nowrap ${order.status === "paid"
                                                     ? "bg-green-500/20 text-green-400"
                                                     : order.status === "pending"
                                                         ? "bg-yellow-500/20 text-yellow-400"
@@ -138,7 +140,7 @@ export default function DashboardHome() {
                                                 {order.status}
                                             </span>
 
-                                            <p className="mt-1 text-xs text-slate-500">
+                                            <p className="mt-1 text-xs text-slate-500 whitespace-nowrap">
                                                 {order.createdAt
                                                     ? new Date(
                                                         order.createdAt
@@ -196,7 +198,7 @@ export default function DashboardHome() {
 
                                             <div className="min-w-0 flex-1">
 
-                                                <h3 className="truncate text-sm sm:text-base font-semibold text-white">
+                                                <h3 className="break-words text-sm sm:text-base font-semibold text-white">
                                                     {item.description}
                                                 </h3>
 
