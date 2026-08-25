@@ -7,6 +7,7 @@ const QUEUE = "order.queue";
 
 const ROUTING_KEY = "order.created";
 
+
 async function start() {
     console.log("Starting Consumer...");
 
