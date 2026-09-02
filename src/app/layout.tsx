@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import ReduxProvider from "@/redux/provider";
 import { SocketProvider } from "@/providers/SocketProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = { title: "Prime Markets", description: "Ecommerce" };
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             {children}
           </SocketProvider>
         </ReduxProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
